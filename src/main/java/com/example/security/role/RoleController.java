@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/roles")
@@ -41,13 +42,13 @@ public class RoleController {
     @GetMapping("/name/{name}")
     @PreAuthorize("hasAuthority('GET_SINGLE_ROLE')")
     public ResponseEntity<ApiResponse> getRoleByName(@PathVariable String name) {
-        List<Role> role = roleService.getRoleByName(name);
-        if (role.isEmpty()) {
-            ApiResponse apiResponse = new ApiResponse(true, null, "Error fetching role", 400);
-            return ResponseEntity.status(400).body(apiResponse);
-        } else {
+        Optional<Role> role = roleService.getRoleByName(name);
+        if (role.isPresent()) {
             ApiResponse apiResponse = new ApiResponse(true, role, "Role fetched successfully", 200);
             return ResponseEntity.status(200).body(apiResponse);
+        } else {
+            ApiResponse apiResponse = new ApiResponse(true, null, "Error fetching role", 400);
+            return ResponseEntity.status(400).body(apiResponse);
         }
     }
 
@@ -58,7 +59,6 @@ public class RoleController {
         authority.setAuthorityId(newRole.getAuthorityId());
 
         Role role = new Role();
-        role.setAuthority(authority);
         role.setName(newRole.getName());
 
         Role resRole = roleService.addNewRole(role);
@@ -73,7 +73,6 @@ public class RoleController {
         authority.setAuthorityId(newRole.getAuthorityId());
 
         Role role = new Role();
-        role.setAuthority(authority);
         role.setName(newRole.getName());
 
         return roleService.updateRole(role, id);

@@ -10,14 +10,14 @@ public class Authority {
     @Column(name = "authority_id")
     private long authorityId;
 
-    @Column(name = "authority")
-    private String authority;
+    @Column(name = "name")
+    private String name;
 
     public Authority() {
     }
 
-    public Authority(String authority) {
-        this.authority = authority;
+    public Authority(String name) {
+        this.name = name;
     }
 
     public long getAuthorityId() {
@@ -28,11 +28,11 @@ public class Authority {
         this.authorityId = authorityId;
     }
 
-    public String getAuthority() {
-        return authority;
+    public String getName() {
+        return name;
     }
 
-    public void setAuthority(String authority) {
-        this.authority = authority;
+    public void setName(String name) {
+        this.name = name;
     }
 }

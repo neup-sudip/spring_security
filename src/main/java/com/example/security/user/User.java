@@ -1,14 +1,17 @@
 package com.example.security.user;
 
+import com.example.security.role.Role;
 import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private long userId;
+    private Long id;
 
     @Column(name = "username")
     private String username;
@@ -16,24 +19,29 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "role")
-    private String role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
     }
 
-    public User(String username, String password, String role) {
+    public User(String username, String password, Set<Role> roles) {
         this.username = username;
         this.password = password;
-        this.role = role;
+        this.roles = roles;
     }
 
-    public long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -52,11 +60,11 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

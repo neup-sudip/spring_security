@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleService {
@@ -26,17 +27,14 @@ public class RoleService {
         return roleRepository.findById(id).orElse(null);
     }
 
-    public List<Role> getRoleByName(String name) {
+    public Optional<Role> getRoleByName(String name) {
         return roleRepository.findByName(name);
     }
 
     public Role addNewRole(Role role) {
-        Role exist = roleRepository.findByNameAndAuthority(role.getName(), role.getAuthority().getAuthorityId());
-        if (exist == null) {
+
             return roleRepository.save(role);
-        } else {
-            throw new CustomException("Role already exist", 400);
-        }
+
     }
 
     public ResponseEntity<ApiResponse> updateRole(Role role, long id) {
@@ -53,7 +51,7 @@ public class RoleService {
         }
 
         prevRole.setName(role.getName());
-        prevRole.setAuthority(role.getAuthority());
+        prevRole.setAuthorities(role.getAuthorities());
         Role updatedRole = roleRepository.save(prevRole);
 
         ApiResponse apiResponse = new ApiResponse(true, updatedRole, "Role updated successfully !", 200);

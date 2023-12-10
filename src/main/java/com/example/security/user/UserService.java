@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -28,8 +29,8 @@ public class UserService {
     }
 
     public User addNewUser(User user) {
-        User emailOrUsernameExist = userRepository.findByUsername(user.getUsername());
-        if (emailOrUsernameExist != null) {
+        Optional<User> emailOrUsernameExist = userRepository.findByUsername(user.getUsername());
+        if (emailOrUsernameExist.isPresent()) {
             throw new CustomException("UserName is taken", 400);
         }
         return userRepository.save(user);
@@ -48,7 +49,7 @@ public class UserService {
             return ResponseEntity.status(400).body(apiResponse);
         }
 
-        prevUser.setRole(user.getRole());
+        prevUser.setRoles(user.getRoles());
         prevUser.setUsername(user.getUsername());
         prevUser.setPassword(user.getPassword());
         User newUser = userRepository.save(prevUser);

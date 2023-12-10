@@ -3,6 +3,9 @@ package com.example.security.role;
 import com.example.security.authority.Authority;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Entity
 @Table(name = "roles")
@@ -15,16 +18,20 @@ public class Role {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "authority_id", nullable = false)
-    private Authority authority;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "role_authorities",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "authority_id")
+    )
+    private Set<Authority> authorities = new HashSet<>();
 
     public Role() {
     }
 
-    public Role(String name, Authority authority) {
+    public Role(String name, Set<Authority> authorities) {
         this.name = name;
-        this.authority = authority;
+        this.authorities = authorities;
     }
 
     public long getRoleId() {
@@ -43,11 +50,11 @@ public class Role {
         this.name = name;
     }
 
-    public Authority getAuthority() {
-        return authority;
+    public Set<Authority> getAuthorities() {
+        return authorities;
     }
 
-    public void setAuthority(Authority authority) {
-        this.authority = authority;
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
     }
 }
