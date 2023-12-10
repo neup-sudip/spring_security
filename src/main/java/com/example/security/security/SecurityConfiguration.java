@@ -22,10 +22,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfiguration  {
 
     private final CustomUserDetailsService customUserDetailsService;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Autowired
-    public SecurityConfiguration(CustomUserDetailsService customUserDetailsService) {
+    public SecurityConfiguration(CustomUserDetailsService customUserDetailsService, CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.customUserDetailsService = customUserDetailsService;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
     @Bean
@@ -37,6 +39,7 @@ public class SecurityConfiguration  {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler))
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(c -> c.configurationSource(corsFilter()))
                 .authorizeHttpRequests((requests) -> requests

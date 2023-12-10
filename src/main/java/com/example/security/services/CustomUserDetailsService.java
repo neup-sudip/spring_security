@@ -1,6 +1,5 @@
 package com.example.security.services;
 
-import com.example.security.entity.Authority;
 import com.example.security.entity.Role;
 import com.example.security.entity.User;
 import com.example.security.repos.UserRepository;
