@@ -17,7 +17,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         ObjectMapper objectMapper = new ObjectMapper();
-        ApiResponse apiResponse = new ApiResponse(false, null, "Unauthorized", 401);
+        ApiResponse apiResponse = new ApiResponse(false, null, "Unauthorized");
         response.setContentType("application/json");
         response.setStatus(401);
         response.getWriter().write(objectMapper.writeValueAsString(apiResponse));

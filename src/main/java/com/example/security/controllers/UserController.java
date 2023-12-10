@@ -23,7 +23,7 @@ public class UserController {
    @GetMapping("/users")
    @PreAuthorize("hasAuthority('GET_ALL_USER')")
    public  ResponseEntity<ApiResponse> getAllUsers(){
-        ApiResponse apiResponse = new ApiResponse(true, userService.getUsers(), "All users fetched", 200);
+        ApiResponse apiResponse = new ApiResponse(true, userService.getUsers(), "All users fetched");
         return ResponseEntity.status(200).body(apiResponse);
    }
 
@@ -32,10 +32,10 @@ public class UserController {
     public ResponseEntity<ApiResponse> getUserById(@PathVariable long id) {
         User user = userService.getUserById(id);
         if (user == null) {
-            ApiResponse apiResponse = new ApiResponse(true, null, "Error fetching user", 400);
+            ApiResponse apiResponse = new ApiResponse(true, null, "Error fetching user");
             return ResponseEntity.status(400).body(apiResponse);
         } else {
-            ApiResponse apiResponse = new ApiResponse(true, user, "User fetched successfully", 200);
+            ApiResponse apiResponse = new ApiResponse(true, user, "User fetched successfully");
             return ResponseEntity.status(200).body(apiResponse);
         }
     }
@@ -44,7 +44,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('CREATE_USER')")
     public ResponseEntity<ApiResponse> createUser(@RequestBody User newUser) {
         User user = userService.addNewUser(newUser);
-        ApiResponse apiResponse = new ApiResponse(true, user, "User created successfully !", 200);
+        ApiResponse apiResponse = new ApiResponse(true, user, "User created successfully !");
         return ResponseEntity.status(200).body(apiResponse);
     }
 
@@ -58,10 +58,10 @@ public class UserController {
     public ResponseEntity<ApiResponse> loginUser(@RequestBody User user, HttpServletResponse response) {
         User returnUser = userService.login(user.getUsername(), user.getPassword());
         if (returnUser != null) {
-            ApiResponse apiResponse = new ApiResponse(true, null, "user success", 200);
+            ApiResponse apiResponse = new ApiResponse(true, null, "user success");
             return ResponseEntity.status(200).body(apiResponse);
         } else {
-            ApiResponse apiResponse = new ApiResponse(false, null, "user not found", 400);
+            ApiResponse apiResponse = new ApiResponse(false, null, "user not found");
             return ResponseEntity.status(400).body(apiResponse);
         }
     }

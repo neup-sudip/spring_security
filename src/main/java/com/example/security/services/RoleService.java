@@ -41,13 +41,13 @@ public class RoleService {
     public ResponseEntity<ApiResponse> updateRole(Role role, long id) {
         Role prevRole = roleRepository.findById(id).orElse(null);
         if (prevRole == null) {
-            ApiResponse apiResponse = new ApiResponse(false, null, "Role not found !", 400);
+            ApiResponse apiResponse = new ApiResponse(false, null, "Role not found !");
             return ResponseEntity.status(400).body(apiResponse);
         }
 
         Role roleExist = roleRepository.findByNotIdAndName(id, role.getName());
         if (roleExist != null) {
-            ApiResponse apiResponse = new ApiResponse(false, null, "Role already exist !", 400);
+            ApiResponse apiResponse = new ApiResponse(false, null, "Role already exist !");
             return ResponseEntity.status(400).body(apiResponse);
         }
 
@@ -55,7 +55,7 @@ public class RoleService {
         prevRole.setAuthorities(role.getAuthorities());
         Role updatedRole = roleRepository.save(prevRole);
 
-        ApiResponse apiResponse = new ApiResponse(true, updatedRole, "Role updated successfully !", 200);
+        ApiResponse apiResponse = new ApiResponse(true, updatedRole, "Role updated successfully !");
         return ResponseEntity.status(200).body(apiResponse);
     }
 }

@@ -24,7 +24,7 @@ public class RoleController {
     @GetMapping()
     @PreAuthorize("hasAuthority('GET_ALL_ROLE')")
     public ResponseEntity<ApiResponse> getAllRoles(){
-        ApiResponse apiResponse = new ApiResponse(true, roleService.getRoles(), "All roles fetched", 200);
+        ApiResponse apiResponse = new ApiResponse(true, roleService.getRoles(), "All roles fetched");
         return ResponseEntity.status(200).body(apiResponse);
     }
 
@@ -33,10 +33,10 @@ public class RoleController {
     public ResponseEntity<ApiResponse> getRoleById(@PathVariable long id) {
         Role role = roleService.getRoleById(id);
         if (role == null) {
-            ApiResponse apiResponse = new ApiResponse(true, null, "Error fetching role", 400);
+            ApiResponse apiResponse = new ApiResponse(true, null, "Error fetching role");
             return ResponseEntity.status(400).body(apiResponse);
         } else {
-            ApiResponse apiResponse = new ApiResponse(true, role, "Role fetched successfully", 200);
+            ApiResponse apiResponse = new ApiResponse(true, role, "Role fetched successfully");
             return ResponseEntity.status(200).body(apiResponse);
         }
     }
@@ -46,10 +46,10 @@ public class RoleController {
     public ResponseEntity<ApiResponse> getRoleByName(@PathVariable String name) {
         Optional<Role> role = roleService.getRoleByName(name);
         if (role.isPresent()) {
-            ApiResponse apiResponse = new ApiResponse(true, role, "Role fetched successfully", 200);
+            ApiResponse apiResponse = new ApiResponse(true, role, "Role fetched successfully");
             return ResponseEntity.status(200).body(apiResponse);
         } else {
-            ApiResponse apiResponse = new ApiResponse(true, null, "Error fetching role", 400);
+            ApiResponse apiResponse = new ApiResponse(true, null, "Error fetching role");
             return ResponseEntity.status(400).body(apiResponse);
         }
     }
@@ -64,7 +64,7 @@ public class RoleController {
         role.setName(newRole.getName());
 
         Role resRole = roleService.addNewRole(role);
-        ApiResponse apiResponse = new ApiResponse(true, resRole, "Role created successfully !", 200);
+        ApiResponse apiResponse = new ApiResponse(true, resRole, "Role created successfully !");
         return ResponseEntity.status(200).body(apiResponse);
     }
 

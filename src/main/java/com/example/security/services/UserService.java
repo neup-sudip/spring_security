@@ -41,13 +41,13 @@ public class UserService {
     public ResponseEntity<ApiResponse> updateUser(User user, long id) {
         User prevUser = userRepository.findById(id).orElse(null);
         if (prevUser == null) {
-            ApiResponse apiResponse = new ApiResponse(false, null, "User not found !", 400);
+            ApiResponse apiResponse = new ApiResponse(false, null, "User not found !");
             return ResponseEntity.status(400).body(apiResponse);
         }
 
         User emailOrUsernameExist = userRepository.findByNotIdAndUsername(id, user.getUsername());
         if (emailOrUsernameExist != null) {
-            ApiResponse apiResponse = new ApiResponse(false, null, "Email/Username already exist !", 400);
+            ApiResponse apiResponse = new ApiResponse(false, null, "Email/Username already exist !");
             return ResponseEntity.status(400).body(apiResponse);
         }
 
@@ -56,7 +56,7 @@ public class UserService {
         prevUser.setPassword(user.getPassword());
         User newUser = userRepository.save(prevUser);
 
-        ApiResponse apiResponse = new ApiResponse(true, newUser, "User updated successfully !", 200);
+        ApiResponse apiResponse = new ApiResponse(true, newUser, "User updated successfully !");
         return ResponseEntity.status(200).body(apiResponse);
     }
 
