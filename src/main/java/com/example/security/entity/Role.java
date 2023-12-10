@@ -1,6 +1,6 @@
-package com.example.security.role;
+package com.example.security.entity;
 
-import com.example.security.authority.Authority;
+import com.example.security.entity.Authority;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -24,6 +24,7 @@ public class Role {
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id")
     )
+
     private Set<Authority> authorities = new HashSet<>();
 
     public Role() {

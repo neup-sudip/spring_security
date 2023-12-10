@@ -1,5 +1,7 @@
-package com.example.security.user;
+package com.example.security.services;
 
+import com.example.security.entity.User;
+import com.example.security.repos.UserRepository;
 import com.example.security.utils.ApiResponse;
 import com.example.security.utils.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;

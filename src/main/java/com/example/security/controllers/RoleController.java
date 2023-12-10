@@ -1,12 +1,14 @@
-package com.example.security.role;
+package com.example.security.controllers;
 
-import com.example.security.authority.Authority;
+import com.example.security.entity.Authority;
+import com.example.security.dto.NewRoleReq;
+import com.example.security.entity.Role;
+import com.example.security.services.RoleService;
 import com.example.security.utils.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController

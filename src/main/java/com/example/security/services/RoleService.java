@@ -1,7 +1,8 @@
-package com.example.security.role;
+package com.example.security.services;
 
+import com.example.security.entity.Role;
+import com.example.security.repos.RoleRepository;
 import com.example.security.utils.ApiResponse;
-import com.example.security.utils.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

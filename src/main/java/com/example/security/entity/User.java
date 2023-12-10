@@ -1,6 +1,5 @@
-package com.example.security.user;
+package com.example.security.entity;
 
-import com.example.security.role.Role;
 import jakarta.persistence.*;
 
 import java.util.HashSet;

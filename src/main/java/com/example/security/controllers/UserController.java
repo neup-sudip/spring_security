@@ -1,5 +1,7 @@
-package com.example.security.user;
+package com.example.security.controllers;
 
+import com.example.security.entity.User;
+import com.example.security.services.UserService;
 import com.example.security.utils.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,9 @@
-package com.example.security.auth;
+package com.example.security.services;
 
-import com.example.security.role.Role;
-import com.example.security.user.User;
-import com.example.security.user.UserRepository;
+import com.example.security.entity.Authority;
+import com.example.security.entity.Role;
+import com.example.security.entity.User;
+import com.example.security.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,7 +28,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println(username);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
@@ -42,7 +42,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Set<GrantedAuthority> authorities = new HashSet<>();
         for (Role role : roles) {
             authorities.addAll(role.getAuthorities().stream()
-                    .map(authority -> new SimpleGrantedAuthority("ROLE_" + authority.getName()))
+                    .map(authority -> new SimpleGrantedAuthority(authority.getName()))
                     .collect(Collectors.toSet()));
         }
         return authorities;

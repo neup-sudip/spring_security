@@ -1,5 +1,6 @@
-package com.example.security.user;
+package com.example.security.repos;
 
+import com.example.security.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,22 +1,12 @@
-package com.example.security.authority;
+package com.example.security.dto;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "authority")
-public class Authority {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "authority_id")
+public class NewRoleReq {
     private long authorityId;
 
-    @Column(name = "name")
     private String name;
 
-    public Authority() {
-    }
-
-    public Authority(String name) {
+    public NewRoleReq(long authorityId, String name) {
+        this.authorityId = authorityId;
         this.name = name;
     }
 
