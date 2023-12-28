@@ -19,15 +19,17 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
-public class SecurityConfiguration  {
+public class SecurityConfiguration {
 
     private final CustomUserDetailsService customUserDetailsService;
-    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAuthEntryPoint entryPoint;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Autowired
-    public SecurityConfiguration(CustomUserDetailsService customUserDetailsService, CustomAccessDeniedHandler customAccessDeniedHandler) {
+    public SecurityConfiguration(CustomUserDetailsService customUserDetailsService, CustomAuthEntryPoint entryPoint, CustomAccessDeniedHandler accessDeniedHandler) {
         this.customUserDetailsService = customUserDetailsService;
-        this.customAccessDeniedHandler = customAccessDeniedHandler;
+        this.entryPoint = entryPoint;
+        this.accessDeniedHandler = accessDeniedHandler;
     }
 
     @Bean
@@ -39,12 +41,13 @@ public class SecurityConfiguration  {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler))
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(entryPoint).accessDeniedHandler(accessDeniedHandler))
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(c -> c.configurationSource(corsFilter()))
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/api/public/**").permitAll()
-                        .anyRequest().authenticated());
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/api/public/**").permitAll())
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/api/v1/**").authenticated());
 
         http.addFilterBefore(new JwtAuthFilter(customUserDetailsService), UsernamePasswordAuthenticationFilter.class);
 
