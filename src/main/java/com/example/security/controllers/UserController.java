@@ -3,12 +3,12 @@ package com.example.security.controllers;
 import com.example.security.entity.Customer;
 import com.example.security.services.UserService;
 import com.example.security.utils.ApiResponse;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,12 +26,12 @@ public class UserController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('GET_SINGLE_USER')")
     public ResponseEntity<ApiResponse> getUserById(@PathVariable long id) {
-        Customer customer = userService.getUserById(id);
-        if (customer == null) {
+        Optional<Customer> customer = userService.getUserById(id);
+        if (customer.isEmpty()) {
             ApiResponse apiResponse = new ApiResponse(true, null, "Error fetching user");
             return ResponseEntity.status(400).body(apiResponse);
         } else {
-            ApiResponse apiResponse = new ApiResponse(true, customer, "User fetched successfully");
+            ApiResponse apiResponse = new ApiResponse(true, customer.get(), "User fetched successfully");
             return ResponseEntity.status(200).body(apiResponse);
         }
     }

@@ -1,8 +1,10 @@
 package com.example.security.controllers;
 
+import com.example.security.dto.CustomerLogin;
 import com.example.security.entity.Customer;
 import com.example.security.services.UserService;
 import com.example.security.utils.ApiResponse;
+import com.example.security.utils.CryptoConverter;
 import com.example.security.utils.JwtServices;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,6 +27,7 @@ public class PublicController {
 
     private final UserService userService;
     private final JwtServices jwtServices;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
@@ -34,9 +37,13 @@ public class PublicController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<ApiResponse> loginUser(@RequestBody Customer customerRequest, HttpServletResponse response) {
-        Optional<Customer> optCustomer = userService.getUserByUsername(customerRequest.getUsername());
-        if (optCustomer.isPresent() && customerRequest.getPassword().equals(optCustomer.get().getPassword())) {
+    public ResponseEntity<ApiResponse> loginUser(@RequestBody CustomerLogin customerRequest, HttpServletResponse response) {
+        CryptoConverter converter = new CryptoConverter();
+        String password = customerRequest.getPassword();
+        String encryptPass = converter.convertToDatabaseColumn(password);
+
+        Optional<Customer> optCustomer = userService.login(customerRequest.getUsername(), encryptPass);
+        if (optCustomer.isPresent()) {
             Customer customer = optCustomer.get();
 
             String token = jwtServices.generateToken(customer);

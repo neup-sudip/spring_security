@@ -20,6 +20,7 @@ public class Customer {
     @Column(name = "username")
     private String username;
 
+    @JsonIgnore
     @Column(name = "password")
     @Convert(converter = CryptoConverter.class)
     private String password;

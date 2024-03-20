@@ -26,8 +26,8 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public Customer getUserById(long id) {
-        return userRepository.findById(id).orElse(null);
+    public Optional<Customer> getUserById(long id) {
+        return userRepository.findById(id);
     }
 
     public Customer addNewUser(Customer customer) {
@@ -58,6 +58,10 @@ public class UserService {
 
         ApiResponse apiResponse = new ApiResponse(true, newCustomer, "User updated successfully !");
         return ResponseEntity.status(200).body(apiResponse);
+    }
+
+    public Optional<Customer> login(String username, String password){
+        return Optional.ofNullable(userRepository.findByUsernameAndPassword(username, password));
     }
 
 }
