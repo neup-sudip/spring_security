@@ -3,7 +3,7 @@ package com.example.security.services;
 import com.example.security.entity.Role;
 import com.example.security.repos.RoleRepository;
 import com.example.security.utils.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -11,36 +11,26 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class RoleService {
 
     private final RoleRepository roleRepository;
-
-    @Autowired
-    public RoleService(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
 
     public List<Role> getRoles() {
         return roleRepository.findAll();
     }
 
-    public Role getRoleById(long id) {
-        return roleRepository.findById(id).orElse(null);
-    }
-
-    public Optional<Role> getRoleByName(String name) {
-        return roleRepository.findByName(name);
+    public Optional<Role> getRoleById(long id) {
+        return roleRepository.findById(id);
     }
 
     public Role addNewRole(Role role) {
-
-            return roleRepository.save(role);
-
+        return roleRepository.save(role);
     }
 
     public ResponseEntity<ApiResponse> updateRole(Role role, long id) {
-        Role prevRole = roleRepository.findById(id).orElse(null);
-        if (prevRole == null) {
+        Optional<Role> optPrevRole = roleRepository.findById(id);
+        if (optPrevRole.isEmpty()) {
             ApiResponse apiResponse = new ApiResponse(false, null, "Role not found !");
             return ResponseEntity.status(400).body(apiResponse);
         }
@@ -51,6 +41,7 @@ public class RoleService {
             return ResponseEntity.status(400).body(apiResponse);
         }
 
+        Role prevRole = optPrevRole.get();
         prevRole.setName(role.getName());
         prevRole.setAuthorities(role.getAuthorities());
         Role updatedRole = roleRepository.save(prevRole);

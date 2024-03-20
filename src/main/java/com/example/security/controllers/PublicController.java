@@ -1,15 +1,60 @@
 package com.example.security.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.security.entity.Customer;
+import com.example.security.services.UserService;
+import com.example.security.utils.ApiResponse;
+import com.example.security.utils.JwtServices;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/public")
+@RequiredArgsConstructor
+@RequestMapping("/public")
 public class PublicController {
 
+    @Value("${cookie.expire.time}")
+    private int COOKIE_EXPIRE;
+
+    private final UserService userService;
+    private final JwtServices jwtServices;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
     @GetMapping()
-    public String getString(){
+    public String getString() {
         return "Public Route";
+    }
+
+    @PostMapping("/auth/login")
+    public ResponseEntity<ApiResponse> loginUser(@RequestBody Customer customerRequest, HttpServletResponse response) {
+        Optional<Customer> optCustomer = userService.getUserByUsername(customerRequest.getUsername());
+        if (optCustomer.isPresent() && customerRequest.getPassword().equals(optCustomer.get().getPassword())) {
+            Customer customer = optCustomer.get();
+
+            String token = jwtServices.generateToken(customer);
+            final Cookie cookie = new Cookie("auth", token);
+
+            logger.info("JWT :: {} ", token);
+
+            cookie.setSecure(false);
+            cookie.setHttpOnly(false);
+            cookie.setMaxAge(COOKIE_EXPIRE);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+
+            ApiResponse apiResponse = new ApiResponse(true, null, "Login success");
+            return ResponseEntity.status(200).body(apiResponse);
+        } else {
+            ApiResponse apiResponse = new ApiResponse(false, null, "user not found");
+            return ResponseEntity.status(400).body(apiResponse);
+        }
     }
 }
