@@ -46,7 +46,7 @@ public class JwtUtils {
 
     private boolean isTokenExpired(String token) {
         if (Boolean.TRUE.equals(decodeToken(token).b)) {
-            return !decodeToken(token).a.getExpiration().before(new Date(System.currentTimeMillis()));
+            return decodeToken(token).a.getExpiration().before(new Date(System.currentTimeMillis()));
         }
         return true;
     }

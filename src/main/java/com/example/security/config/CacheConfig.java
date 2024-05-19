@@ -20,7 +20,7 @@ public class CacheConfig {
     @Primary
     public CacheManager cacheManager() {
 
-        log.info("Cache is picked !");
+        log.info("CACHING IS ON !");
 
         CaffeineCacheManager cacheManager = new CaffeineCacheManager("defaultCache");
         cacheManager.setCaffeine(Caffeine.newBuilder()
