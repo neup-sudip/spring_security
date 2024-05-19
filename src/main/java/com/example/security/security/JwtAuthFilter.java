@@ -1,12 +1,13 @@
 package com.example.security.security;
 
 import com.example.security.services.CustomUserDetailsService;
-import com.example.security.utils.JwtServices;
+import com.example.security.utils.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,22 +19,24 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService customUserDetailsService;
-    private final JwtServices jwtServices;
+    private final JwtUtils jwtUtils;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String token = jwtServices.extractToken(request, "auth");
+        String token = jwtUtils.extractToken(request, "auth");
         String username = null;
 
         if(!token.isEmpty()){
-            jwtServices.validateToken(token);
-             username = jwtServices.getUsername(token);
+            boolean isValid = jwtUtils.validateToken(token);
+            username = isValid ? jwtUtils.getUsername(token) : null;
         }
+        log.info("USERNAME: {}", username);
 
         if(username != null){
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);

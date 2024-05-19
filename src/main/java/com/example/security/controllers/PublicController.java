@@ -5,12 +5,10 @@ import com.example.security.entity.Customer;
 import com.example.security.services.UserService;
 import com.example.security.utils.ApiResponse;
 import com.example.security.utils.CryptoConverter;
-import com.example.security.utils.JwtServices;
+import com.example.security.utils.JwtUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +24,7 @@ public class PublicController {
     private int COOKIE_EXPIRE;
 
     private final UserService userService;
-    private final JwtServices jwtServices;
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    private final JwtUtils jwtUtils;
 
     @GetMapping()
     public String getString() {
@@ -46,10 +41,8 @@ public class PublicController {
         if (optCustomer.isPresent()) {
             Customer customer = optCustomer.get();
 
-            String token = jwtServices.generateToken(customer);
+            String token = jwtUtils.generateToken(customer);
             final Cookie cookie = new Cookie("auth", token);
-
-            logger.info("JWT :: {} ", token);
 
             cookie.setSecure(false);
             cookie.setHttpOnly(false);
@@ -57,7 +50,7 @@ public class PublicController {
             cookie.setPath("/");
             response.addCookie(cookie);
 
-            ApiResponse apiResponse = new ApiResponse(true, null, "Login success");
+            ApiResponse apiResponse = new ApiResponse(true, token, "Login success");
             return ResponseEntity.status(200).body(apiResponse);
         } else {
             ApiResponse apiResponse = new ApiResponse(false, null, "user not found");

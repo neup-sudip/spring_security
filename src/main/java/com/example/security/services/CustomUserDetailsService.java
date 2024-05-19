@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserService userServices;
     private final RoleService roleService;
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -43,6 +43,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Optional<Role> optRole = roleService.getRoleById(role);
 
         if (optRole.isEmpty()) {
+            logger.info("ROLE NOT FOUND !");
             authorities.add(new SimpleGrantedAuthority("GET_SINGLE_USER"));
         } else {
             String roleAuths = optRole.get().getAuthorities();

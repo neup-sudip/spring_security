@@ -6,6 +6,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Jwts;
@@ -13,11 +14,12 @@ import io.jsonwebtoken.Jwts;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
 @Service
-public class JwtServices {
+public class JwtUtils {
 
     @Value("${jwt.secret.key}")
     private String JWT_SECRET;
@@ -38,14 +40,15 @@ public class JwtServices {
         return "";
     }
 
-    public void validateToken(String token) {
-        if (token == null || isTokenExpired(token)) {
-            throw new CustomException("Invalid or Missing token", 403);
-        }
+    public boolean validateToken(String token) {
+        return token != null && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
-        return decodeToken(token).getExpiration().before(new Date(System.currentTimeMillis()));
+        if (Boolean.TRUE.equals(decodeToken(token).b)) {
+            return !decodeToken(token).a.getExpiration().before(new Date(System.currentTimeMillis()));
+        }
+        return true;
     }
 
     public String generateToken(Customer user) {
@@ -64,12 +67,12 @@ public class JwtServices {
                 .compact();
     }
 
-    public Claims decodeToken(String token) {
+    public Pair<Claims, Boolean> decodeToken(String token) {
         try {
             Key key = new SecretKeySpec(JWT_SECRET.getBytes(), SignatureAlgorithm.HS512.getJcaName());
-            return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+            return new Pair<>(Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody(), true);
         } catch (Exception ex) {
-            throw new CustomException("Token Invalid !", 403);
+            return new Pair<>(null, false);
         }
     }
 
