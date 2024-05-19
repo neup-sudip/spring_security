@@ -19,7 +19,7 @@ public class Role {
     @Column(name = "role_id")
     private long roleId;
 
-    @Column(name = "name")
+    @Column(name = "name", length = 16, unique = true)
     private String name;
 
     //COMMA SEPARATED AUTHORITIES

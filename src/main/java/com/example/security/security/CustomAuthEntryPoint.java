@@ -17,11 +17,8 @@ import java.io.IOException;
 public class CustomAuthEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-
-        log.error("Exception: ", authException);
-
         ObjectMapper objectMapper = new ObjectMapper();
-        ApiResponse apiResponse = new ApiResponse(false, "", "Invalid or missing token !");
+        ApiResponse apiResponse = new ApiResponse(false, "", authException.getMessage());
         response.setContentType("application/json");
         response.setStatus(401);
         response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
