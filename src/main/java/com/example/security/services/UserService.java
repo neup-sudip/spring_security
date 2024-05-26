@@ -19,7 +19,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public List<Customer> getUsers() {
-        return userRepository.findAll(Sort.by("id"));
+        return userRepository.findAll();
     }
 
     public Optional<Customer> getUserByUsername(String username){
@@ -39,8 +39,8 @@ public class UserService {
     }
 
     public ResponseEntity<ApiResponse> updateUser(Customer customer, long id) {
-        Customer prevCustomer = userRepository.findById(id).orElse(null);
-        if (prevCustomer == null) {
+        Optional<Customer> optCustomer = userRepository.findById(id);
+        if (optCustomer.isEmpty()) {
             ApiResponse apiResponse = new ApiResponse(false, null, "User not found !");
             return ResponseEntity.status(400).body(apiResponse);
         }
@@ -51,6 +51,7 @@ public class UserService {
             return ResponseEntity.status(400).body(apiResponse);
         }
 
+        Customer prevCustomer = optCustomer.get();
         prevCustomer.setRole(customer.getRole());
         prevCustomer.setUsername(customer.getUsername());
         prevCustomer.setPassword(customer.getPassword());
