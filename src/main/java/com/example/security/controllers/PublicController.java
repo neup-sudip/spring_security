@@ -33,11 +33,7 @@ public class PublicController {
 
     @PostMapping("/auth/login")
     public ResponseEntity<ApiResponse> loginUser(@RequestBody CustomerLogin customerRequest, HttpServletResponse response) {
-        CryptoConverter converter = new CryptoConverter();
-        String password = customerRequest.getPassword();
-        String encryptPass = converter.convertToDatabaseColumn(password);
-
-        Optional<Customer> optCustomer = userService.login(customerRequest.getUsername(), encryptPass);
+        Optional<Customer> optCustomer = userService.login(customerRequest.getUsername(), customerRequest.getPassword());
         if (optCustomer.isPresent()) {
             Customer customer = optCustomer.get();
 

@@ -5,7 +5,6 @@ import com.example.security.repos.UserRepository;
 import com.example.security.utils.ApiResponse;
 import com.example.security.utils.CustomException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
