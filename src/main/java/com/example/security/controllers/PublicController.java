@@ -6,7 +6,6 @@ import com.example.security.services.UserService;
 import com.example.security.utils.ApiResponse;
 import com.example.security.utils.CryptoConverter;
 import com.example.security.utils.JwtUtils;
-import com.example.security.utils.Translator;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +25,6 @@ public class PublicController {
 
     private final UserService userService;
     private final JwtUtils jwtUtils;
-    private final Translator translator;
-
-    @GetMapping()
-    public String getString() {
-        return translator.getMessage("hello.sir");
-    }
 
     @PostMapping("/auth/login")
     public ResponseEntity<ApiResponse> loginUser(@RequestBody CustomerLogin customerRequest, HttpServletResponse response) {

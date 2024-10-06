@@ -16,7 +16,7 @@ public class RoleService {
 
     private final RoleRepository roleRepository;
 
-    @Cacheable(value = "defaultCache", cacheManager = "defaultCacheManager", key = "#roleId", unless="#result == null")
+    @Cacheable(value = "roleCache", key = "#roleId", unless="#result == null")
     public Optional<Role> getRoleById(long roleId) {
         log.info("From DB");
         return roleRepository.findById(roleId);
